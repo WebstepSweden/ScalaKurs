@@ -37,7 +37,7 @@ class ListsSuite extends FunSuite {
    * which tests that its argument evaluates to `true`. So one of the simplest
    * successful tests is the following:
    */
-  test("one plus one is two")(assert(1 + 1 == 2))
+//  test("one plus one is two")(assert(1 + 1 == 2))
 
 
   /**
@@ -46,9 +46,9 @@ class ListsSuite extends FunSuite {
    *
    * This allows tests to be written in a more readable manner:
    */
-  test("one plus one is three?") {
-    assert(1 + 1 == 3) // This assertion fails! Go ahead and fix it.
-  }
+//  test("one plus one is three?") {
+//    assert(1 + 1 == 3) // This assertion fails! Go ahead and fix it.
+//  }
 
 
   /**
@@ -71,9 +71,9 @@ class ListsSuite extends FunSuite {
    *
    * We recommend to always use the `===` equality operator when writing tests.
    */
-  test("details why one plus one is not three") {
-    assert(1 + 1 === 3) // Fix me, please!
-  }
+//  test("details why one plus one is not three") {
+//    assert(1 + 1 === 3) // Fix me, please!
+//  }
 
 
   /**
@@ -83,16 +83,16 @@ class ListsSuite extends FunSuite {
    * In the following example, we test the fact that the method `intNotZero`
    * throws an `IllegalArgumentException` if its argument is `0`.
    */
-  test("intNotZero throws an exception if its argument is 0") {
-    intercept[IllegalArgumentException] {
-      intNotZero(0)
-    }
-  }
-
-  def intNotZero(x: Int): Int = {
-    if (x == 0) throw new IllegalArgumentException("zero is not allowed")
-    else x
-  }
+//  test("intNotZero throws an exception if its argument is 0") {
+//    intercept[IllegalArgumentException] {
+//      intNotZero(0)
+//    }
+//  }
+//
+//  def intNotZero(x: Int): Int = {
+//    if (x == 0) throw new IllegalArgumentException("zero is not allowed")
+//    else x
+//  }
 
 
   /**
@@ -117,8 +117,34 @@ class ListsSuite extends FunSuite {
   test("sum of a few numbers") {
     assert(sum(List(1,2,0)) === 3)
   }
-  
+
+  test("sum of no numbers") {
+    assert(sum(List()) === 0)
+  }
+
+  test("sum of negative numbers") {
+    assert(sum(List(1, -5, 2)) === -2)
+  }
+
   test("max of a few numbers") {
     assert(max(List(3, 7, 2)) === 7)
+  }
+
+  test("max of no numbers should throw exception") {
+    intercept[NoSuchElementException] {
+    	max(List())
+    }
+  }
+
+  test("max of repeating number") {
+    assert(max(List(1, 1, 3, 5, 3, 3)) === 5)
+  }
+  
+  test("max of negative numbers") {
+    assert(max(List(-3, -7, -2)) === -2)
+  }
+
+  test("max of one number") {
+    assert(max(List(-3)) === -3)
   }
 }

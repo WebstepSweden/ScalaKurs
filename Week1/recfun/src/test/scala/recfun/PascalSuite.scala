@@ -19,4 +19,34 @@ class PascalSuite extends FunSuite {
   test("col=1,row=3") {
     assert(pascal(1,3) === 3)
   }
+  
+  test("col=0,row=0") {
+    assert(pascal(0,0) === 1)
+  }
+
+  test("col=0,row=1") {
+    assert(pascal(0,1) === 1)
+  }
+
+  test("col=1,row=1") {
+    assert(pascal(0,1) === 1)
+  }
+  
+  test("col=0,row=-1") {
+    intercept[IllegalArgumentException] {
+      pascal(0,-1)
+    }
+  }
+  
+  test("col=-1,row=4") {
+    intercept[IllegalArgumentException] {
+      pascal(-1,4)
+    }
+  }
+
+  test("col=5,row=4") {
+    intercept[IllegalArgumentException] {
+      pascal(5,4)
+    }
+  }
 }
