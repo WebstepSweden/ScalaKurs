@@ -168,10 +168,24 @@ class FunSetSuite extends FunSuite {
   }
   
   test("map") {
-    val s = map(range(3, 5), x => (x + 1))
+    val s = map(range(3, 5), x => (x - 1))
     assert(!contains(s, 1))
     assert(contains(s, 2))
     assert(contains(s, 4))
     assert(!contains(s, 5))
+  }
+
+  test("map2") {
+    val s = map(range(3, 5), x => (x * 2))
+    assert(!contains(s, 5))
+    assert(contains(s, 6))
+    assert(contains(s, 10))
+    assert(!contains(s, 11))
+  }
+
+  test("map3") {
+    val s = map(singletonSet(1000), x => (x - 1))
+    assert(contains(s, 999))
+    assert(!contains(s, 1000))
   }
 }

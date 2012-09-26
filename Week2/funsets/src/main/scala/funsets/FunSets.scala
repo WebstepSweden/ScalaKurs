@@ -71,7 +71,14 @@ object FunSets {
   /**
    * Returns a set transformed by applying `f` to each element of `s`.
    */
-  def map(s: Set, f: Int => Int): Set = x => contains(s, f(x))
+  def map(s: Set, f: Int => Int): Set = x => {
+    def iter(a: Int): Boolean = {
+      if (a > bound) false
+      else if (f(a) == x) contains(s, a)
+      else iter(a + 1)
+    }
+    iter(-bound)
+  }
 
   /**
    * Displays the contents of a set
