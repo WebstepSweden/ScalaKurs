@@ -138,4 +138,19 @@ class FunSetSuite extends FunSuite {
       assert(contains(s, 3), "difference 3")
     }
   }
+
+  test("forall should do something with all integers") {
+    new TestSets {
+      val u = union(union(s1, s2), union(s2, s3))
+      assert(forall(u, x => x > 0), "forall 1")
+      assert(!forall(u, x => x > 2), "forall 2")
+    }
+  }
+  
+  test("check if there exists a bounded integer within `s` that satisfies `p`") {
+    new TestSets {
+      val u = union(union(s1, s2), union(s2, s3))
+      assert(exists(u, x => x > 0), "exists 1")
+    }
+  }
 }
