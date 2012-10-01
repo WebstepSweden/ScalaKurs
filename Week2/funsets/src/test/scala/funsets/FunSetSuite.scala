@@ -132,7 +132,7 @@ class FunSetSuite extends FunSuite {
   test("subset of `s` for which `p` holds") {
     new TestSets {
       val u = union(union(s1, s2), union(s2, s3))
-      val s = filter(u, x => x > 1) // 2, 3
+      val s = filter(u, _ > 1) // 2, 3
       assert(!contains(s, 1), "difference 1")
       assert(contains(s, 2), "difference 2")
       assert(contains(s, 3), "difference 3")
@@ -142,15 +142,33 @@ class FunSetSuite extends FunSuite {
   test("forall should do something with all integers") {
     new TestSets {
       val u = union(union(s1, s2), union(s2, s3))
-      assert(forall(u, x => x > 0), "forall 1")
-      assert(!forall(u, x => x > 2), "forall 2")
+      assert(forall(u, _ > 0), "forall 1")
+      assert(!forall(u, _ > 2), "forall 2")
     }
   }
   
   test("check if there exists a bounded integer within `s` that satisfies `p`") {
     new TestSets {
-      val u = union(union(s1, s2), union(s2, s3))
-      assert(exists(u, x => x > 0), "exists 1")
+      val u = union(union(s1, s2), union(s2, s3)) // 1, 2, 3
+      assert(!exists(u, _ == 0), "exists 0")
+      assert(exists(u, _ == 1), "exists 1")
+      assert(exists(u, _ == 2), "exists 2")
+      assert(exists(u, _ == 3), "exists 3")
+      assert(!exists(u, _ == 4), "exists 4")
+      assert(exists(u, _ % 2 == 0), "exists 5")
     }
   }
+  
+  test("a set transformed by applying `f` to each element of `s`") {
+    new TestSets {
+      val u = union(union(s1, s2), union(s2, s3))
+      val m = map(u, _ * 2)
+      assert(contains(m, 2), "map 1")
+      assert(contains(m, 4), "map 2")
+      assert(contains(m, 6), "map 3")
+      assert(!contains(m, 3), "map 4")
+    }
+  }
+  
+  
 }
