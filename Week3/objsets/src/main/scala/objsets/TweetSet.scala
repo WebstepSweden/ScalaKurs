@@ -22,7 +22,14 @@ abstract class TweetSet {
   def union(that: TweetSet): TweetSet
 
   // Hint: the method "remove" on TweetSet will be very useful.
-  def ascendingByRetweet: Trending = ???
+  def ascendingByRetweet: Trending = ascendingByRetweet0(new EmptyTrending)
+  def ascendingByRetweet0(accu: Trending): Trending = {
+    if (isEmpty) accu
+    else {
+      val min = findMin  
+      remove(min).ascendingByRetweet0(accu + min)
+    }
+  }
 
   // The following methods are provided for you, and do not have to be changed
   // -------------------------------------------------------------------------
@@ -80,7 +87,6 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
   def union(that: TweetSet): TweetSet = {
     ((left union right) union that) incl elem
   }
-
 
   // The following methods are provided for you, and do not have to be changed
   // -------------------------------------------------------------------------
