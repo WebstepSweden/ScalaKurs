@@ -68,7 +68,7 @@ abstract class TweetSet {
 
 class Empty extends TweetSet {
 
-  def filter0(p: Tweet => Boolean, accu: TweetSet): TweetSet = new Empty
+  def filter0(p: Tweet => Boolean, accu: TweetSet): TweetSet = accu
 
   // The following methods are provided for you, and do not have to be changed
   // -------------------------------------------------------------------------
@@ -84,9 +84,9 @@ class Empty extends TweetSet {
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
   def filter0(p: Tweet => Boolean, accu: TweetSet): TweetSet = {
-    val newAccu = if (p(elem)) accu incl elem else accu
-    if (left.isEmpty && right.isEmpty) newAccu
-    else tail.filter0(p, newAccu)
+    val newAccu = left.filter0(p, right.filter0(p, accu))
+    if (p(elem)) newAccu incl elem
+    else newAccu
   }
 
   // The following methods are provided for you, and do not have to be changed
@@ -171,10 +171,4 @@ object Main extends App {
   // Some help printing the results:
   // println("RANKED:")
   GoogleVsApple.trending foreach println
-
-  //  println("google")
-  //  GoogleVsApple.googleTweets foreach println
-  //  println("apple")
-  //  GoogleVsApple.appleTweets foreach println
-
 }
