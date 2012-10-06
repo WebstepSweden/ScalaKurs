@@ -153,16 +153,23 @@ object GoogleVsApple {
   
   val apple = List("ios", "iOS", "iphone", "iPhone", "ipad", "iPad")
 
-  val googleTweets: TweetSet = ???
+//  println("Start reading 1")
+  val googleTweets: TweetSet = TweetReader.allTweets.filter(keywordFilter(google))
+//  println("Start reading 2")
 
-  val appleTweets: TweetSet = ???
-
+  val appleTweets: TweetSet = TweetReader.allTweets.filter(keywordFilter(apple))
+//  println("Done reading")
+  
+  def keywordFilter(keywords: List[String]): Tweet => Boolean = {
+    tweet => keywords.exists(tweet.text.contains(_))
+  }
+  
   // Q: from both sets, what is the tweet with highest #retweets?
-  val trending: Trending = ???
+  val trending: Trending = (googleTweets union appleTweets) ascendingByRetweet
 }
 
 object Main extends App {
-  // Some help printing the results:
-  // println("RANKED:")
-  // GoogleVsApple.trending foreach println
+   //Some help printing the results:
+   println("RANKED:")
+   GoogleVsApple.trending foreach println
 }
