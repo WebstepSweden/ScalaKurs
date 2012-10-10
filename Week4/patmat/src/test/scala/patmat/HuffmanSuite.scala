@@ -73,12 +73,16 @@ class HuffmanSuite extends FunSuite {
   }
 
   test("French secret") {
-    assert(decodedSecret === string2Chars("huffmanestcoo"))
+    assert(decodedSecret === string2Chars("huffmanestcool"))
   }
   
   test("decode and encode a very short text should be identity") {
     new TestTrees {
       assert(decode(t1, encode(t1)("ab".toList)) === "ab".toList)
     }
+  }
+  
+  test("encode and decode longer text") {
+    assert(decode(frenchCode, encode(frenchCode)("thisisalongertext".toList)) === "thisisalongertext".toList)
   }
 }

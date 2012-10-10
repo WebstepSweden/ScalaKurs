@@ -132,8 +132,8 @@ object Huffman {
    *  - try to find sensible parameter names for `xxx`, `yyy` and `zzz`.
    */
   def until(done: List[CodeTree] => Boolean, operation: List[CodeTree] => List[CodeTree])(trees: List[CodeTree]): List[CodeTree] = {
-    if (!done(trees)) until(done, operation)(operation(trees))
-    else trees
+    if (done(trees)) trees
+    else until(done, operation)(operation(trees))
   }
 
   /**
@@ -155,14 +155,15 @@ object Huffman {
    */
   def decode(tree: CodeTree, bits: List[Bit]): List[Char] = {
     def decode0(subTree: CodeTree, bits: List[Bit], acum: List[Char]): List[Char] = 
-      if (bits.isEmpty) acum
-      else {
-    	subTree match {
+      if (bits.isEmpty) subTree match {
+        case Fork(_, _, _, _) => throw new IllegalStateException("Not full symbol")
+        case Leaf(char, _) => acum ::: List(char)
+      }
+      else subTree match {
       	  case Fork(left, right, _, _) => 
       		  if (bits.head == 0) decode0(left, bits.tail, acum)
       		  else decode0(right, bits.tail, acum)
       	  case Leaf(char, _) => decode0(tree, bits, acum ::: List(char)) 
-        }
       }
     
     decode0(tree, bits, List())
@@ -194,7 +195,22 @@ object Huffman {
    * This function encodes `text` using the code tree `tree`
    * into a sequence of bits.
    */
-  def encode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
+  def encode(tree: CodeTree)(text: List[Char]): List[Bit] = {
+    def contains(tree: CodeTree, char: Char): Boolean = chars(tree).find(x => char == x).isDefined
+    
+    def encode0(subTree: CodeTree)(text: List[Char], acum: List[Bit]): List[Bit] = {
+    	if (text.isEmpty) acum
+    	else subTree match {
+      	  case Fork(left, right, _, _) => 
+      		  if (contains(left, text.head)) encode0(left)(text, acum ::: List(0))
+      		  else if (contains(right, text.head)) encode0(right)(text, acum ::: List(1))
+      		  else throw new IllegalStateException("Unknown character " + text.head)
+      	  case Leaf(char, _) => encode0(tree)(text.tail, acum) 
+      }
+    }
+    
+    encode0(tree)(text, List())
+  }
 
 
   // Part 4b: Encoding using code table
