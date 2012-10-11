@@ -85,4 +85,13 @@ class HuffmanSuite extends FunSuite {
   test("encode and decode longer text") {
     assert(decode(frenchCode, encode(frenchCode)("thisisalongertext".toList)) === "thisisalongertext".toList)
   }
+  
+  test("Code bits found in table") {
+    val table = List(('a', List(0, 1, 0)), ('b', List(1, 1)))
+    assert(codeBits(table)('b') === List(1, 1))
+  }
+  
+  test("Quick encode") {
+    assert(quickEncode(frenchCode)("allisgood".toList) === encode(frenchCode)("allisgood".toList)) 
+  }
 }
