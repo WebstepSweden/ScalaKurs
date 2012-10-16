@@ -99,9 +99,49 @@ class HuffmanSuite extends FunSuite {
       assert(decode(t1, encode(t1)("ab".toList)) === "ab".toList)
     }
   }
+
   test("decode and encode a long text should be identity") {
-	  new TestTrees {
-		  assert(decode(t2, encode(t2)("abbddbabdbdadabbdbadbdabadb".toList)) === "abbddbabdbdadabbdbadbdabadb".toList)
-	  }
+    new TestTrees {
+      assert(decode(t2, encode(t2)("abbddbabdbdadabbdbadbdabadb".toList)) === "abbddbabdbdadabbdbadbdabadb".toList)
+    }
+  }
+
+  test("convert test") {
+    val chars = string2Chars("abrakadabra")
+    val tree = createCodeTree(chars)
+    val table = convert(tree)
+    val expected = List(('a', List(0)), ('r', List(1, 0)), ('k', List(1, 1, 0, 0)), ('d', List(1, 1, 0, 1)), ('b', List(1, 1, 1)))
+    assert(table === expected)
+  }
+
+  test("merge test") {
+    val table1 = convert(createCodeTree(string2Chars("abc")))
+    val table2 = convert(createCodeTree(string2Chars("def")))
+    val merged = mergeCodeTables(table1, table2)
+    val expected = List(('c', List(0)), ('a', List(1, 0)), ('b', List(1, 1)), ('f', List(0)), ('d', List(1, 0)), ('e', List(1, 1)))
+    assert(merged === expected)
+  }
+
+  test("quick encode test") {
+    val chars = string2Chars("abrakadabra")
+    val tree = createCodeTree(chars)
+    val charList = string2Chars("abba")
+    val encoded = quickEncode(tree)(charList)
+    assert(encoded === List(0, 1, 1, 1, 1, 1, 1, 0))
+  }
+
+  test("decode french secret") {
+    val chars = string2Chars("huffmanestcool")
+    val encoded = quickEncode(frenchCode)(chars)
+    assert(secret === encoded)
   }
 }
+
+
+
+
+
+
+
+
+
