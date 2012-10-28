@@ -93,14 +93,15 @@ object Anagrams {
    *  in the example above could have been displayed in some other order.
    */
   def combinations(occurrences: Occurrences): List[Occurrences] = {
-    def helper(occ: Occurrences, acc: List[Occurrences]): List[Occurrences] = occ match {
-      case Nil => Nil :: acc
-      case (c, n) :: tail => {
-        if (n == 1) helper(tail, List((c, 1)) :: occ :: acc)
-        else helper((c, n - 1) :: tail, List((c, n)) :: occ :: acc)
-      }
-    }
-    helper(occurrences, List[Occurrences]())
+    // convert Occurrences to list of chars, ((a, 2)(b, 1)) => ((a, a, b))
+    val chars = for {
+      occ <- occurrences
+      c <- 1 to occ._2
+    } yield occ._1
+    // find all combinations in all sizes for this list
+    val combinations = (for (x <- 0 to chars.size) yield chars.combinations(x).toList).flatten
+    // convert back to occurrences
+    (combinations map (li => wordOccurrences(li.mkString))).toList
   }
 
   /**
