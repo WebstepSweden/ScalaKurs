@@ -86,14 +86,19 @@ object Anagrams {
    *  in the example above could have been displayed in some other order.
    */
   def combinations(occurrences: Occurrences): List[Occurrences] =  {    
-    def comb(begining: Occurrences, reminder: Occurrences): List[Occurrences] = {
+    def combine(begining: Occurrences, reminder: Occurrences): List[Occurrences] = {
       reminder match {
         case Nil => List(begining)
-        case (char, count) :: tail => (0 until count).toList.flatMap((x : Int) => comb(begining ::: List((char, x + 1)), tail)) ::: comb(begining, tail)
+        case (char, count) :: tail => {
+          val charCounts = (1 until count + 1).toList
+          val combinationsWithThisChar = charCounts.flatMap(x => combine(begining ::: List((char, x)), tail))
+          val combinationsWithoutThisChar = combine(begining, tail)
+          combinationsWithThisChar ::: combinationsWithoutThisChar
+        }
       }
     }
     
-    comb(List(), occurrences)
+    combine(List(), occurrences)
   }
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
@@ -107,14 +112,16 @@ object Anagrams {
    *  and has no zero-entries.
    */
   def subtract(x: Occurrences, y: Occurrences): Occurrences = {
-    def sub(res: Map[Char, Int], s: (Char, Int)) = {
-      val newCount = res(s._1) - s._2
+    def subtractOccurrenceFromMap(occurrenceMap: Map[Char, Int], occurrence: (Char, Int)) = {
+      val (char, count) = occurrence
       
-      if (newCount > 0) res.updated(s._1, res(s._1) - s._2)
-      else res - s._1
+      val newCount = occurrenceMap(char) - count      
+      if (newCount > 0) occurrenceMap.updated(char, newCount)
+      else occurrenceMap - char
     }
     
-    y.toMap.foldLeft(x.toMap)(sub).toList.sorted
+    val result = y.toMap.foldLeft(x.toMap)(subtractOccurrenceFromMap)
+    result.toList.sorted
   }
 
   /** Returns a list of all anagram sentences of the given sentence.
@@ -160,7 +167,18 @@ object Anagrams {
   def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
     def findAnagrams(occurences: Occurrences): List[Sentence] = {
       if (occurences.isEmpty) List(List())
-      else (for (oc <- combinations(occurences); if (!dictionaryByOccurrences(oc).isEmpty); word <- dictionaryByOccurrences(oc)) yield findAnagrams(subtract(occurences, oc)).map(s => word :: s)).flatten      
+      else {
+        val anagrams = for (
+            oc <- combinations(occurences); 
+            if (!dictionaryByOccurrences(oc).isEmpty); 
+            word <- dictionaryByOccurrences(oc)) 
+          yield {
+            val remainingOccurrences = subtract(occurences, oc)         
+        	val remainingAnagrams = findAnagrams(remainingOccurrences)
+        	remainingAnagrams.map(s => word :: s)          
+        }
+        anagrams.flatten      
+      }
     }
     
     findAnagrams(sentenceOccurrences(sentence))    
