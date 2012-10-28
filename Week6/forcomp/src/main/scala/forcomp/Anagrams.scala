@@ -109,7 +109,16 @@ object Anagrams {
    *  Note: the resulting value is an occurrence - meaning it is sorted
    *  and has no zero-entries.
    */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = ???
+  def subtract(x: Occurrences, y: Occurrences): Occurrences = {
+    def sub(res: Map[Char, Int], s: (Char, Int)) = {
+      val newCount = res(s._1) - s._2
+      
+      if (newCount > 0) res.updated(s._1, res(s._1) - s._2)
+      else res - s._1
+    }
+    
+    y.toMap.foldLeft(x.toMap)(sub).toList.sorted
+  }
 
   /** Returns a list of all anagram sentences of the given sentence.
    *  
@@ -151,6 +160,12 @@ object Anagrams {
    *
    *  Note: There is only one anagram of an empty sentence.
    */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
-
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+    def findAnagrams(occurences: Occurrences): List[Sentence] = {
+      if (occurences.isEmpty) List(List())
+      else (for (oc <- combinations(occurences); if (!dictionaryByOccurrences(oc).isEmpty); word <- dictionaryByOccurrences(oc)) yield findAnagrams(subtract(occurences, oc)).map(s => word :: s)).flatten      
+    }
+    
+    findAnagrams(sentenceOccurrences(sentence))    
+  }  
 }

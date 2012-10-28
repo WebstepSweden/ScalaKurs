@@ -78,6 +78,19 @@ class AnagramsSuite extends FunSuite {
     assert(combinations(abba).toSet === abbacomb.toSet)
   }
 
+  test("combinations sentence : i am") {
+    val expected = List(
+      List(),
+      List(('a', 1)),
+      List(('i', 1)),
+      List(('m', 1)),
+      List(('a', 1), ('i', 1)),
+      List(('a', 1), ('m', 1)),
+      List(('i', 1), ('m', 1)),
+      List(('a', 1), ('i', 1), ('m', 1))
+    )
+    assert(combinations(sentenceOccurrences(List("I", "am"))).toSet === expected.toSet)
+  }
 
 
   test("sentence anagrams: []") {
@@ -111,5 +124,4 @@ class AnagramsSuite extends FunSuite {
     )
     assert(sentenceAnagrams(sentence).toSet === anas.toSet)
   }  
-
 }
