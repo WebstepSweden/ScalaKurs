@@ -88,7 +88,16 @@ object Anagrams {
    *  Note that the order of the occurrence list subsets does not matter -- the subsets
    *  in the example above could have been displayed in some other order.
    */
-  def combinations(occurrences: Occurrences): List[Occurrences] = ???
+  def combinations(occurrences: Occurrences): List[Occurrences] =  {    
+    def comb(begining: Occurrences, reminder: Occurrences): List[Occurrences] = {
+      reminder match {
+        case Nil => List(begining)
+        case (char, count) :: tail => (0 until count).toList.flatMap((x : Int) => comb(begining ::: List((char, x + 1)), tail)) ::: comb(begining, tail)
+      }
+    }
+    
+    comb(List(), occurrences)
+  }
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
    * 
