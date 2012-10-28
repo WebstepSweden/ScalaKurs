@@ -99,9 +99,9 @@ object Anagrams {
       c <- 1 to occ._2
     } yield occ._1
     // find all combinations in all sizes for this list
-    val combinations = (for (x <- 0 to chars.size) yield chars.combinations(x).toList).flatten
+    val combinations = (for (x <- 0 to chars.size) yield chars.combinations(x).toList).flatten.toList
     // convert back to occurrences
-    (combinations map (li => wordOccurrences(li.mkString))).toList
+    combinations map (li => wordOccurrences(li.mkString))
   }
 
   /**
