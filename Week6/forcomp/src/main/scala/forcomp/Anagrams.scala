@@ -156,16 +156,23 @@ object Anagrams {
    *  Note: There is only one anagram of an empty sentence.
    */
   def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
-    val so = sentenceOccurrences(sentence)
-    println(so)
-    val comb = combinations(so)
-    println(comb)
-    val anagrams = comb map (c => wordAnagrams(c.mkString))
-    println(anagrams)
-    
-    //for (so <- sentenceOccurrences(sentence))
-    
-    Nil
-  }
 
+    def helper(occs: Occurrences): List[Sentence] = {
+
+      if (occs.isEmpty) List(Nil)
+      else {
+        val combs = combinations(occs)
+        val result = for {
+          comb <- combs
+          word <- dictionaryByOccurrences.getOrElse(comb, Nil)
+        } yield word :: helper(subtract(occs, comb))
+        println("result: " + result.flatten)
+      }
+
+      Nil
+    }
+
+    helper(sentenceOccurrences(sentence))
+
+  }
 }

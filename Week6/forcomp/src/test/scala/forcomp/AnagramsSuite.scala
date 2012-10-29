@@ -78,12 +78,11 @@ class AnagramsSuite extends FunSuite {
     val bb = wordOccurrences("bb")
     assert(subtract(abrakadabra, bb) === arakadara)
   }
-
+/*
   test("sentence anagrams: []") {
     val sentence = List()
     assert(sentenceAnagrams(sentence) === List(Nil))
   }
-
   test("sentence anagrams: Linux rulez") {
     val sentence = List("Linux", "rulez")
     val anas = List(
@@ -108,6 +107,16 @@ class AnagramsSuite extends FunSuite {
       List("rulez", "Linux"),
       List("Linux", "rulez"))
     assert(sentenceAnagrams(sentence).toSet === anas.toSet)
+  }
+ */
+  
+  test("sentence anagram: mad") {
+    //println((dictionaryByOccurrences.values.toList.sortBy(_.size).reverse.map(li => "(" + li.size + ") " + li.mkString(","))).mkString("\n"))
+
+    val sentence = List("mad")
+    val anas = List("mad", "dam")
+    assert(sentenceAnagrams(sentence).toSet === anas.toSet)
+    
   }
 
 }
