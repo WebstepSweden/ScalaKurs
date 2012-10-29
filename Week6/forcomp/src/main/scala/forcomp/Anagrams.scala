@@ -94,10 +94,7 @@ object Anagrams {
    */
   def combinations(occurrences: Occurrences): List[Occurrences] = {
     // convert Occurrences to list of chars, ((a, 2)(b, 1)) => ((a, a, b))
-    val chars = for {
-      occ <- occurrences
-      c <- 1 to occ._2
-    } yield occ._1
+    val chars = occurrences flatMap { e => List.fill(e._2)(e._1) }
     // find all combinations in all sizes for this list
     val combinations = (for (x <- 0 to chars.size) yield chars.combinations(x).toList).flatten.toList
     // convert back to occurrences
@@ -115,7 +112,7 @@ object Anagrams {
    *  Note: the resulting value is an occurrence - meaning it is sorted
    *  and has no zero-entries.
    */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = ???
+  def subtract(x: Occurrences, y: Occurrences): Occurrences = x filterNot (y.contains(_))
 
   /**
    * Returns a list of all anagram sentences of the given sentence.
@@ -158,6 +155,17 @@ object Anagrams {
    *
    *  Note: There is only one anagram of an empty sentence.
    */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+    val so = sentenceOccurrences(sentence)
+    println(so)
+    val comb = combinations(so)
+    println(comb)
+    val anagrams = comb map (c => wordAnagrams(c.mkString))
+    println(anagrams)
+    
+    //for (so <- sentenceOccurrences(sentence))
+    
+    Nil
+  }
 
 }
