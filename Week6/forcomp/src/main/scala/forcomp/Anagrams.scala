@@ -1,7 +1,6 @@
 package forcomp
 
 import common._
-import com.sun.tools.internal.xjc.reader.dtd.Occurence
 
 object Anagrams {
 
