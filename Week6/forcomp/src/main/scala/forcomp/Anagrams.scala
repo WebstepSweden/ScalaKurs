@@ -167,20 +167,15 @@ object Anagrams {
    */
   def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
 
-    def helper(occs: Occurrences, acc: List[Sentence]): List[Sentence] = {
-      
-      println("acc: " + acc)
-      
-      if (occs.isEmpty) acc
-      val combs = combinations(occs)
-
-      val result = for {
-        comb <- combs
-        sugg <- dictionaryByOccurrences(comb)
-        sub <- List(subtract(occs, comb))
-        if (sub.isEmpty || !(helper(sub, List(sugg) :: acc) isEmpty))
-      } yield sugg :: acc.flatten
-      result
+    def helper(occs: Occurrences, acc: Sentence): List[Sentence] = {
+      if (occs.isEmpty) List(acc)
+      else {
+        for {
+          comb <- combinations(occs)
+          sugg <- dictionaryByOccurrences(comb)
+          others <- helper(subtract(occs, comb), sugg :: acc)
+        } yield others
+      }
     }
 
     if (sentence.isEmpty) List(Nil)
