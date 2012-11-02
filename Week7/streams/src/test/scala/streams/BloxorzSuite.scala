@@ -6,6 +6,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 import Bloxorz._
+import java.util.logging.StreamHandler
 
 @RunWith(classOf[JUnitRunner])
 class BloxorzSuite extends FunSuite {
@@ -153,6 +154,12 @@ class BloxorzSuite extends FunSuite {
   test("optimal solution length for level 1") {
     new Level1 {
       assert(solution.length === optsolution.length)
+    }
+  }
+
+  test("Empty stream in from") {
+    new Level1 {
+      assert(from(Stream.empty, Set()) === Stream.empty)
     }
   }
 }
