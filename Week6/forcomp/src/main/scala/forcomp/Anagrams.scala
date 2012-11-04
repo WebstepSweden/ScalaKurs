@@ -181,6 +181,8 @@ object Anagrams {
     if (sentence.isEmpty) List(Nil)
     else helper(sentenceOccurrences(sentence), List())
   }
+  
+  def go(s: String) = (sentenceAnagrams(List(s)).map(li => li.mkString(" "))).mkString("\n")
 }
 
 
